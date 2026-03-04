@@ -152,6 +152,4 @@ Vite 配置位于 `Exchangeapp_frontend/vite.config.ts`，API 请求会代理到
 
 欢迎提交 Issue 和 Pull Request 来改进项目。
 
-## 许可证
 
-ISC License
