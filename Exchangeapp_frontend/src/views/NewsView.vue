@@ -1,0 +1,346 @@
+<template>
+  <div class="news-container">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">金融新闻</h1>
+        <p class="page-description">了解最新的金融市场动态和专业分析</p>
+      </div>
+
+      <div v-if="!authStore.isAuthenticated" class="auth-prompt">
+        <div class="blankslate">
+          <el-icon size="48" class="text-muted"><Lock /></el-icon>
+          <h3>需要登录</h3>
+          <p>登录后可以查看最新的金融新闻和市场分析</p>
+          <router-link to="/login" class="btn btn-primary">立即登录</router-link>
+        </div>
+      </div>
+
+      <div v-else-if="loading" class="loading-section">
+        <el-skeleton :rows="3" animated />
+      </div>
+
+      <div v-else-if="articles.length === 0" class="empty-section">
+        <div class="blankslate">
+          <el-icon size="48" class="text-muted"><Document /></el-icon>
+          <h3>暂无文章</h3>
+          <p>目前还没有发布任何文章，请稍后再来查看</p>
+        </div>
+      </div>
+
+      <div v-else class="articles-section">
+        <div class="articles-header">
+          <h2 class="section-title">最新文章</h2>
+          <div class="articles-stats">
+            共 {{ articles.length }} 篇文章
+          </div>
+        </div>
+
+        <div class="articles-list">
+          <article v-for="article in articles" :key="article.ID" class="article-card">
+            <div class="article-header">
+              <div class="article-meta">
+                <span class="article-date">{{ formatDate(article.CreatedAt) }}</span>
+                <el-tag v-if="article.category" size="small" class="article-category">
+                  {{ article.category }}
+                </el-tag>
+              </div>
+              <h2 class="article-title">
+                <a @click="viewDetail(article.ID)" class="article-link">{{ article.title }}</a>
+              </h2>
+              <p class="article-preview">{{ article.preview }}</p>
+            </div>
+
+            <div class="article-footer">
+              <div class="article-author">
+                <el-avatar :size="20" :src="article.author?.avatar" class="author-avatar">
+                  {{ article.author?.username?.charAt(0) }}
+                </el-avatar>
+                <span class="author-name">{{ article.author?.username || '匿名用户' }}</span>
+              </div>
+
+              <div class="article-actions">
+                <button class="action-btn" @click="viewDetail(article.ID)">
+                  <el-icon size="16"><View /></el-icon>
+                  阅读更多
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
+import axios from '../axios';
+import { useAuthStore } from '../store/auth';
+import type { Article } from "../types/Article";
+import { Lock, Document, View } from '@element-plus/icons-vue';
+
+const articles = ref<Article[]>([]);
+const loading = ref(false);
+const router = useRouter();
+const authStore = useAuthStore();
+
+const fetchArticles = async () => {
+  if (!authStore.isAuthenticated) return;
+
+  try {
+    loading.value = true;
+    const response = await axios.get<Article[]>('/articles');
+    articles.value = response.data;
+  } catch (error) {
+    ElMessage.error('获取文章列表失败');
+    console.error('Failed to load articles:', error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+const viewDetail = (id: string) => {
+  router.push({ name: 'NewsDetail', params: { id } });
+};
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+onMounted(fetchArticles);
+</script>
+
+<style scoped>
+.news-container {
+  min-height: calc(100vh - 64px);
+  background-color: var(--color-canvas-default);
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.page-title {
+  margin-bottom: 8px;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-fg-default);
+}
+
+.page-description {
+  font-size: 18px;
+  color: var(--color-fg-muted);
+}
+
+.auth-prompt {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.blankslate {
+  padding: 80px 40px;
+  text-align: center;
+  background-color: var(--color-canvas-subtle);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-large);
+}
+
+.blankslate h3 {
+  margin: 16px 0 8px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.blankslate p {
+  margin-bottom: 24px;
+  color: var(--color-fg-muted);
+}
+
+.loading-section {
+  padding: 80px 0;
+}
+
+.empty-section {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.articles-section {
+  max-width: 896px;
+  margin: 0 auto;
+}
+
+.articles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border-muted);
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-fg-default);
+  margin: 0;
+}
+
+.articles-stats {
+  font-size: 14px;
+  color: var(--color-fg-muted);
+}
+
+.articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.article-card {
+  padding: 24px;
+  background-color: var(--color-canvas-overlay);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-large);
+  transition: all 0.2s ease-out;
+}
+
+.article-card:hover {
+  border-color: var(--color-accent-muted);
+  box-shadow: var(--shadow-medium);
+}
+
+.article-header {
+  margin-bottom: 16px;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.article-date {
+  font-size: 14px;
+  color: var(--color-fg-muted);
+}
+
+.article-category {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.article-title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.article-link {
+  color: var(--color-fg-default);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.article-link:hover {
+  color: var(--color-accent-fg);
+  text-decoration: underline;
+}
+
+.article-preview {
+  margin: 0;
+  color: var(--color-fg-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.article-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border-muted);
+}
+
+.article-author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.author-avatar {
+  border: 1px solid var(--color-border-default);
+}
+
+.author-name {
+  font-size: 14px;
+  color: var(--color-fg-muted);
+}
+
+.article-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-accent-fg);
+  background-color: transparent;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-medium);
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.action-btn:hover {
+  background-color: var(--color-accent-subtle);
+  border-color: var(--color-accent-muted);
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 32px 16px;
+  }
+
+  .articles-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .article-card {
+    padding: 20px;
+  }
+
+  .article-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+</style>
