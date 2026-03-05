@@ -9,3 +9,6 @@ database:
 
 redis:
   Addr: "localhost:6379"
+
+jwt:
+  Secret: "secret"
