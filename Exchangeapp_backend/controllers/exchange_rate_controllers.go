@@ -26,11 +26,11 @@ func CreateExchangeRate(ctx *gin.Context) {
 	// 将当前的时间赋值给 exchangeRate 结构体的 Time 字段，以记录汇率数据的创建时间
 	exchangeRate.Time = time.Now()
 
-	// 使用 AutoMigrate 方法进行自动迁移，确保数据库中存在与 ExchangeRate 结构体对应的表，如果迁移失败，返回一个 HTTP 500 错误响应，包含错误信息
-	if err := global.Db.AutoMigrate(&exchangeRate); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	// // 使用 AutoMigrate 方法进行自动迁移，确保数据库中存在与 ExchangeRate 结构体对应的表，如果迁移失败，返回一个 HTTP 500 错误响应，包含错误信息
+	// if err := global.Db.AutoMigrate(&exchangeRate); err != nil {
+	// 	ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 	return
+	// }
 
 	// 使用 Creat 方法将 exchangeRate 变量中的数据插入数据库的 exchange_rates 表中，如果插入失败，返回一个 HTTP 500 错误响应，包含错误信息
 	if err := global.Db.Create(&exchangeRate).Error; err != nil {

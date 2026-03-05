@@ -2,6 +2,7 @@ package config
 
 import (
 	"exchangeapp/global"
+	"exchangeapp/models"
 	"log"
 	"time"
 
@@ -34,4 +35,14 @@ func InitDB() {
 
 	// 将数据库连接对象 db 赋值给全局变量 global.Db，供其他包使用
 	global.Db = db
+
+	// 使用 AutoMigrate 方法进行自动迁移，确保数据库中存在与 User、Article 和 ExchangeRate 结构体对应的表，如果迁移失败，记录日志并退出程序
+	err = global.Db.AutoMigrate(
+		&models.User{},
+		&models.Article{},
+		&models.ExchangeRate{},
+	)
+	if err != nil {
+		log.Fatalf("failed to migrate database, got error: %v", err)
+	}
 }

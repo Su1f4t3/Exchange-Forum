@@ -39,11 +39,11 @@ func Register(ctx *gin.Context) {
 		return
 	}
 
-	// 使用 AutoMigrate 方法进行自动迁移，确保数据库中存在与 User 结构体对应的表，如果迁移失败，返回一个 HTTP 500 错误响应，包含错误信息
-	if err := global.Db.AutoMigrate(&user); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	// // 使用 AutoMigrate 方法进行自动迁移，确保数据库中存在与 User 结构体对应的表，如果迁移失败，返回一个 HTTP 500 错误响应，包含错误信息
+	// if err := global.Db.AutoMigrate(&user); err != nil {
+	// 	ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 	return
+	// }
 
 	// 使用 Create 方法将 user 变量中的数据插入数据库的 users 表中，如果插入失败，返回一个 HTTP 500 错误响应，包含错误信息
 	if err := global.Db.Create(&user).Error; err != nil {
