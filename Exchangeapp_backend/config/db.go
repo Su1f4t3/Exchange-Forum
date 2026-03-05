@@ -41,7 +41,8 @@ func InitDB() {
 		&models.User{},
 		&models.Article{},
 		&models.ExchangeRate{},
-	)
+	) // 执行后，数据库会生成 users、articles 和 exchange_rates 三张表，分别用于存储用户信息、文章信息和汇率信息
+
 	if err != nil {
 		log.Fatalf("failed to migrate database, got error: %v", err)
 	}
