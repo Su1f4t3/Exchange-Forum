@@ -22,7 +22,7 @@ func InitDB() {
 		log.Fatalf("failed to initialize database, got error: %v", err)
 	}
 
-	// 获取底层的 sql.DB 对象，并设置连接池参数，如果出错则记录日志并退出程序
+	// .DB() 方法返回一个 *sql.DB 对象，代表底层的数据库连接池
 	sqlDB, err := db.DB()
 
 	if err != nil {

@@ -31,8 +31,8 @@ func Register(ctx *gin.Context) {
 	// 将 user 变量中的 Password 字段替换为加密后的哈希值 hashedPwd，以确保在数据库中存储的密码是安全的，防止明文密码泄露
 	user.Password = hashedPwd
 
-	// 使用 GerenateJWT 方法生成一个 JWT 令牌，传入 user 变量中的 Username 字段作为参数，并将结果存储在 token 变量中，如果生成失败，返回一个 HTTP 500 错误响应，包含错误信息
-	token, err := utils.GerenateJWT(user.Username)
+	// 使用 GenerateJWT 方法生成一个 JWT 令牌，传入 user 变量中的 Username 字段作为参数，并将结果存储在 token 变量中，如果生成失败，返回一个 HTTP 500 错误响应，包含错误信息
+	token, err := utils.GenerateJWT(user.Username)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -86,8 +86,8 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	// 使用 GerenateJWT 方法生成一个 JWT 令牌，传入 user 变量中的 Username 字段作为参数，并将结果存储在 token 变量中，如果生成失败，返回一个 HTTP 500 错误响应，包含错误信息
-	token, err := utils.GerenateJWT(user.Username)
+	// 使用 GenerateJWT 方法生成一个 JWT 令牌，传入 user 变量中的 Username 字段作为参数，并将结果存储在 token 变量中，如果生成失败，返回一个 HTTP 500 错误响应，包含错误信息
+	token, err := utils.GenerateJWT(user.Username)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

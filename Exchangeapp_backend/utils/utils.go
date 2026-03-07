@@ -16,7 +16,7 @@ func HashPassword(pwd string) (string, error) {
 }
 
 // 生成 JWT 令牌函数，接收一个字符串类型的用户名作为参数，返回一个字符串类型的 JWT 令牌和一个错误对象
-func GerenateJWT(username string) (string, error) {
+func GenerateJWT(username string) (string, error) {
 
 	// 创建一个新的 JWT 令牌对象，使用 HS256 签名方法，并设置一些声明（claims），包括用户名和过期时间
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -34,7 +34,7 @@ func GerenateJWT(username string) (string, error) {
 // 比较密码哈希值函数，接收一个字符串类型的密码和一个字符串类型的哈希值作为参数，返回一个布尔值，表示密码是否与哈希值匹配
 func CheckPasswordHash(pwd, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(pwd))
-	return err == nil
+	return err == nil // 返回一个布尔值，判断 err 是否为 nil。如果 err == nil，布尔值为 true，表示密码与哈希值匹配；如果 err != nil，布尔值为 false，表示密码与哈希值不匹配。
 }
 
 // 解析 JWT 令牌函数，接收一个字符串类型的 JWT 令牌作为参数，返回一个字符串类型的用户名和一个错误对象
