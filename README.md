@@ -259,15 +259,6 @@ sqlDB.SetMaxOpenConns(100)  // 最大连接数上限
 3. **CORS**：当前仅允许 `http://localhost:5173` 跨域，部署时需修改 `router/router.go` 中的 `AllowOrigins`
 4. **自动建表**：应用启动时 GORM 通过 `AutoMigrate` 自动创建/同步数据库表结构，无需手动建表
 
-## 🔮 后续优化方向
-
-- [ ] 接入 Swagger / OpenAPI，自动生成接口文档
-- [ ] 添加单元测试与集成测试（使用 `testify`）
-- [ ] 引入 Zap 结构化日志，替换默认控制台输出
-- [ ] 实现点赞数据 Redis → MySQL 定期持久化，防止数据丢失
-- [ ] 支持 Docker Compose 一键部署（后端 + MySQL + Redis）
-- [ ] 完善基于角色的访问控制（RBAC）
-
 ## 🤝 贡献
 
 欢迎提交 Issue 和 Pull Request 来改进本项目。
