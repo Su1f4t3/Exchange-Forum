@@ -8,21 +8,21 @@
 ![Redis](https://img.shields.io/badge/Redis-6.0+-DC382D?style=flat&logo=redis&logoColor=white)
 ![Vue3](https://img.shields.io/badge/Vue-3.x-42b883?style=flat&logo=vue.js)
 
-## 📖 项目简介
+##  项目简介
 
 **汇流社区**是一个前后端分离的汇率论坛应用。后端使用 Go + Gin 构建 RESTful API，通过 Redis 缓存提升读取性能，使用 JWT 实现无状态身份认证；前端使用 Vue 3 + TypeScript 实现响应式界面，同时适配桌面端和移动端。
 
 ### 核心亮点
 
-- 🔐 **JWT 无状态认证**：使用 JWT（HMAC-SHA256）+ bcrypt 实现安全的用户注册与登录，Token 有效期 72 小时
-- ⚡ **Redis 缓存加速**：文章列表采用 Cache Aside 模式缓存（TTL 10 分钟），发布新文章时主动删除旧缓存，保证数据一致性
-- 🔢 **Redis 原子计数**：点赞功能使用 Redis `INCR` 原子操作，天然避免并发写入冲突
-- 🗃️ **GORM 连接池**：配置 MySQL 连接池（最大空闲连接 10，最大连接数 100），启动时自动 `AutoMigrate` 建表
-- 🌐 **CORS 跨域支持**：通过 `gin-contrib/cors` 中间件配置细粒度跨域策略
-- 🔧 **Viper 配置管理**：使用 Viper 读取 YAML 配置，支持灵活的环境隔离
-- 🚀 **优雅停机**：`main.go` 实现 HTTP 服务器优雅关闭，保障服务平滑重启
+-  **JWT 无状态认证**：使用 JWT（HMAC-SHA256）+ bcrypt 实现安全的用户注册与登录，Token 有效期 72 小时
+-  **Redis 缓存加速**：文章列表采用 Cache Aside 模式缓存（TTL 10 分钟），发布新文章时主动删除旧缓存，保证数据一致性
+-  **Redis 原子计数**：点赞功能使用 Redis `INCR` 原子操作，天然避免并发写入冲突
+-  **GORM 连接池**：配置 MySQL 连接池（最大空闲连接 10，最大连接数 100），启动时自动 `AutoMigrate` 建表
+-  **CORS 跨域支持**：通过 `gin-contrib/cors` 中间件配置细粒度跨域策略
+-  **Viper 配置管理**：使用 Viper 读取 YAML 配置，支持灵活的环境隔离
+-  **优雅停机**：`main.go` 实现 HTTP 服务器优雅关闭，保障服务平滑重启
 
-## 🏗️ 系统架构
+##  系统架构
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -52,7 +52,7 @@
 └──────────────────────┘
 ```
 
-## 🛠️ 技术栈
+##  技术栈
 
 | 层级 | 技术 | 版本 | 用途 |
 |------|------|------|------|
@@ -69,7 +69,7 @@
 | 状态管理 | Pinia | v2.1 | 前端状态管理 |
 | UI 组件 | Element Plus + Vant | — | 桌面端 & 移动端适配 |
 
-## 📁 项目结构
+##  项目结构
 
 ```
 Exchange-Forum/
@@ -112,7 +112,7 @@ Exchange-Forum/
     └── package.json
 ```
 
-## 🚀 快速开始
+##  快速开始
 
 ### 环境要求
 
@@ -149,7 +149,7 @@ redis:
   Addr: "localhost:6379"
 
 jwt:
-  Secret: "your-secret-key"  # ⚠️ 生产环境请替换为强随机字符串
+  Secret: "your-secret-key"  #  生产环境请替换为强随机字符串
 ```
 
 ### 3. 启动后端
@@ -179,7 +179,7 @@ npm run dev
 npm run build
 ```
 
-## 📡 API 文档
+##  API 文档
 
 所有接口均以 `/api` 为前缀。受保护接口需在请求头中携带 JWT Token：`Authorization: Bearer <token>`
 
@@ -227,7 +227,7 @@ npm run build
 | POST | `/api/articles/:id/like` | 点赞文章（Redis INCR 原子操作） |
 | GET  | `/api/articles/:id/like` | 获取文章点赞数 |
 
-## ⚙️ 核心设计
+##  核心设计
 
 ### Redis 缓存策略
 
@@ -252,14 +252,14 @@ sqlDB.SetMaxIdleConns(10)   // 最大空闲连接数
 sqlDB.SetMaxOpenConns(100)  // 最大连接数上限
 ```
 
-## 📝 开发注意事项
+##  开发注意事项
 
-1. **⚠️ JWT 密钥**：默认密钥为 `"secret"`，**生产环境必须替换**为高强度随机字符串
+1. **JWT 密钥**：默认密钥为 `"secret"`，**生产环境必须替换**为高强度随机字符串
 2. **端口**：后端默认运行在 `:8080`，前端开发服务器在 `:5173`，Vite 已配置代理转发 `/api` 请求
 3. **CORS**：当前仅允许 `http://localhost:5173` 跨域，部署时需修改 `router/router.go` 中的 `AllowOrigins`
 4. **自动建表**：应用启动时 GORM 通过 `AutoMigrate` 自动创建/同步数据库表结构，无需手动建表
 
-## 🤝 贡献
+##  贡献
 
 欢迎提交 Issue 和 Pull Request 来改进本项目。
 
